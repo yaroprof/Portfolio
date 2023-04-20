@@ -1,9 +1,25 @@
-import React from 'react'
+import React from 'react';
+import './style.css';
 
 const Header = () => {
   return (
-    <div>Header</div>
-  )
-}
+    <header className="header">
+      <div className="header__wrapper">
+        <h1 className="header__title">
+          <strong>
+            Hi my name is <em>Yaroslav</em>
+          </strong>
+          <br />a frontend developer
+        </h1>
+        <div className="header__text">
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+        </div>
+        <a href="#" className="btn">
+          Download CV
+        </a>
+      </div>
+    </header>
+  );
+};
 
-export default Header
+export default Header;
