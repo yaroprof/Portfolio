@@ -1,23 +1,31 @@
 import { useState, useEffect } from 'react';
 
+// Get data
+// ---> Отримання даних зі сховища
+// Функція getStorageValue отримує ключ та значення за замовчуванням. Вона ***повертає значення, яке збережене у локальному сховищі під вказаним ключем або значення за замовчуванням, якщо відповідного запису у сховищі не знайдено. Для цього функція використовує метод getItem об'єкта localStorage, який отримує значення за ключем та метод JSON.parse, який *перетворює рядок на об'єкт JavaScript.
+
 function getStorageValue(key, defaultValue) {
-	// getting stored value
-  // Функція getStorageValue отримує ключ та значення за замовчуванням, та повертає значення з локального сховища, якщо таке є, або значення за замовчуванням.
-	const saved = localStorage.getItem(key);
-	const initial = JSON.parse(saved);
-	return initial || defaultValue;
+  const saved = localStorage.getItem(key);
+  const initial = JSON.parse(saved);
+  return initial || defaultValue;
 }
 
-// Функція useLocalStorage приймає два аргументи: ключ (key) та значення за замовчуванням (defaultValue). Вона повертає масив з двох елементів: поточне значення з локального сховища та функцію, що дозволяє змінювати це значення.
+// ---> Створення стану кмпонента
+// Функція useLocalStorage приймає два аргументи: ключ (key) та значення за замовчуванням (defaultValue). Вона використовує функцію useState з React, щоб створити ***стан компонента. Початкове значення стану встановлюється за допомогою функції getStorageValue, яка отримує значення з локального сховища за ключем або значення за замовчуванням.
+
 export const useLocalStorage = (key, defaultValue) => {
-	const [value, setValue] = useState(() => {
-		return getStorageValue(key, defaultValue);
-	});
+  const [value, setValue] = useState(() => {
+    return getStorageValue(key, defaultValue);
+  });
 
-	useEffect(() => {
-		// storing input name
-		localStorage.setItem(key, JSON.stringify(value));
-	}, [key, value]);
+  // ---> Збереження змінених даних у локальному середовищі
+  // Далі, використовуючи функцію useEffect, компонент реагує на зміни в стані та ***зберігає оновлене значення у локальному сховищі. Для збереження значення у сховищі використовується метод setItem об'єкта localStorage, який записує значення за ключем, який також передається як перший аргумент функції useEffect.
 
-	return [value, setValue];
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+
+  // ---> повернення 2х елементів: поточне значення та функції для роботи з цим елементом
+  // *Функція useLocalStorage повертає масив з двох елементів: поточне значення з локального сховища та функцію, що дозволяє змінювати це значення. Таким чином, ця функція дозволяє зберігати та отримувати значення у локальному сховищі, що є корисною функцією для багатьох веб-додатків.
+  return [value, setValue];
 };
