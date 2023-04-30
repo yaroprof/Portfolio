@@ -8,6 +8,7 @@ import Footer from './components/footer/Footer';
 import Projects from "./pages/Projects";
 import Project from "./pages/Project-page"
 import Contacts from "./pages/Contacts";
+import ScrollToTop from "./utils/scrollToTop";
 
 
 
@@ -15,6 +16,7 @@ function App() {
   return (
     <div className="App">
       <Router>
+        
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -23,6 +25,7 @@ function App() {
           <Route path="/contacts" element={<Contacts />}/>
         </Routes>
         <Footer />
+        <ScrollToTop />
       </Router>
 
     </div>
