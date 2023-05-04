@@ -1,0 +1,11 @@
+db.users.insert({
+  name: 'crosskyiv',
+  age: 43
+})
+
+db.users.insertMany([
+  {name: "john", age: 35},
+  {name: "peter", age: 45},
+  {name: "bob", age: 35},
+  {name: "dylan", age: 25}
+])
