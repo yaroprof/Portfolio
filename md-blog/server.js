@@ -8,14 +8,16 @@ const articleRouter = require('./routes/articles');
 const app = express();
 // 005
 mongoose.connect('mongodb://localhost/blog', { 
-  useNewUrlParse: true, useUnifiedTopology: true })
+  useNewUrlParser: true, 
+  useUnifiedTopology: true })
 
  
 //- 01
 app.set('view engine', 'ejs');
 
+
 //- 02
-app.use('/articles', articleRouter);
+app.use(express.urlencoded({ extended: false }))
 
 //- 03
 app.get('/', (req, res) => { 
@@ -34,6 +36,7 @@ app.get('/', (req, res) => {
 
   res.render('articles/index', { articles: articles });
 });
+app.use('/articles', articleRouter);
 
 app.listen(5000);
 
