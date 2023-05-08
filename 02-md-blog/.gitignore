@@ -1,0 +1,22 @@
+# ignore node_modules directory
+node_modules/
+
+# ignore log files
+*.log
+
+# ignore compiled output and build files
+dist/
+build/
+
+# ignore environment configuration files
+.env
+.env.local
+.env.*.local
+.env.production
+
+# ignore any file in the root directory named .DS_Store (used by macOS)
+.DS_Store
+
+# ignore user-specific files and folders
+.idea/
+.vscode/
