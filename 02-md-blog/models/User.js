@@ -1,4 +1,4 @@
-import mongoose, { model } from 'mongoose';
+import mongoose from 'mongoose';
 
 // create Schema- create model - всі властивості, які можуть бути у користувача
 
@@ -22,4 +22,4 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export default mongoose.model('User', UserSchema)
+export default mongoose.model('User', UserSchema);

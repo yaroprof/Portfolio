@@ -1,5 +1,5 @@
 import express from 'express';
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 
@@ -12,7 +12,7 @@ import UserModel from './models/User.js';
 // підключення  mongoose
 mongoose
   .connect(
-    'mongodb+srv://crosskyiv:wwwwww@cluster0.f9fnpvo.mongodb.net/blog?retryWrites=true&w=majority',
+    'mongodb+srv://crosskyiv:wwwwww@cluster0.f9fnpvo.mongodb.net/blog01?retryWrites=true&w=majority',
   )
   .then(() => console.log('DB - ok'))
   .catch((err) => console.log('DB - error', err));
@@ -33,31 +33,46 @@ app.use(express.json());
 // перевірка запиту-відповіді ві кл-та на необх.поля
 // req- відповідь кл-та на власну реєстрацію; res - відповідь сервера на присутність помилок
 app.post('/auth/register', registerValidation, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    // повернення всіх помилок
-    return res.status(400).json(errors.array());
-  }
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // повернення всіх помилок
+      return res.status(400).json(errors.array());
+    }
 
+    // passwordHash - save & salt pw; passwordHash- змінна збереження pw
+    const password = req.body.password;
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password, salt);
 
-  // passwordHash - save & salt pw; passwordHash- змінна збереження pw
-  const password = req.body.password;
-  const salt = await bcrypt.genSalt(10);
-  const passwordHash = await bcrypt.hash(password, salt);
-
-  const doc = new UserModel({
-    email: req.body.email,
-    fullName: req.body.fullName,
-    avatarUrl: req.body.avatarUrl,
-    passwordHash,
-  });
+    const doc = new UserModel({
+      email: req.body.email,
+      fullName: req.body.fullName,
+      avatarUrl: req.body.avatarUrl,
+      passwordHash,
+    });
 
     // User Create -> збереження документу у БД
-  const user = await doc.save()
+    const user = await doc.save();
 
-  res.json({
-    success: true,
-  });
+    // шифрування токену
+    const token = jwt.sign(
+      {
+        _id: user._id,
+      },
+      'secret123',
+      {
+expireIn: '30d',
+      }
+    )
+
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Failed to register',
+    });
+  }
 });
 
 /* 01 - сервер відправляє повідомлення про  необхідність аторизації
